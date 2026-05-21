@@ -77,11 +77,41 @@
             padding:20px;-webkit-font-smoothing:antialiased;
         }
 
+        /* === ПЕРЕКЛЮЧАТЕЛЬ ВЕРСИЙ === */
+        .view-switcher {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10000;
+            display: none;
+        }
+        @media (min-width: 768px) {
+            .view-switcher {
+                display: flex;
+            }
+        }
+        .view-switcher button {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            transition: all 0.2s;
+        }
+        .view-switcher button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+        }
+
         /* === АДАПТИВНОСТЬ === */
         
-        /* ПК - рамка телефона */
+        /* ПК - рамка телефона (по умолчанию) */
         @media (min-width: 768px) {
-            .phone-frame{
+            .phone-frame.mobile-view{
                 width:430px;height:932px;
                 background:#0a0a0a;border-radius:50px;
                 padding:12px;position:relative;
@@ -94,26 +124,92 @@
                     0 0 0 12px #2a2a2a,
                     inset 0 0 2px rgba(255,255,255,0.05);
             }
+            .phone-frame.desktop-view{
+                width: 100%;
+                max-width: 1400px;
+                height: auto;
+                min-height: 800px;
+                background: var(--bg-page);
+                border-radius: 0;
+                padding: 0;
+                box-shadow: none;
+            }
             .phone-screen{
                 width:100%;height:100%;border-radius:42px;overflow:hidden;
                 background:var(--bg-page);position:relative;
                 display:flex;flex-direction:column;
                 box-shadow:inset 0 0 4px rgba(0,0,0,0.2);
             }
+            .phone-frame.desktop-view .phone-screen{
+                border-radius: 0;
+                box-shadow: none;
+            }
+            .status-bar, .dynamic-island, .home-indicator {
+                display: flex !important;
+            }
+            .phone-frame.desktop-view .status-bar,
+            .phone-frame.desktop-view .dynamic-island,
+            .phone-frame.desktop-view .home-indicator {
+                display: none !important;
+            }
             /* На ПК все фиксированные элементы делаем абсолютными внутри рамки */
-            .bottom-nav, .toast-container, .modal-overlay {
+            .phone-frame.mobile-view .bottom-nav,
+            .phone-frame.mobile-view .toast-container,
+            .phone-frame.mobile-view .modal-overlay {
                 position: absolute !important;
             }
-            .bottom-nav {
+            .phone-frame.mobile-view .bottom-nav {
                 bottom: 0;
                 left: 0;
                 right: 0;
             }
-            .toast-container {
+            .phone-frame.mobile-view .toast-container {
                 top: 120px;
             }
-            .status-bar, .dynamic-island, .home-indicator {
-                display: flex !important;
+            
+            /* Desktop layout styles */
+            .phone-frame.desktop-view .content-wrapper{
+                display: grid;
+                grid-template-columns: 250px 1fr;
+                height: 100vh;
+            }
+            .phone-frame.desktop-view .header{
+                display: none;
+            }
+            .phone-frame.desktop-view .search-box{
+                display: none;
+            }
+            .phone-frame.desktop-view .main-content{
+                padding: 40px;
+                overflow-y: auto;
+            }
+            .phone-frame.desktop-view .bottom-nav{
+                position: fixed;
+                left: 0;
+                top: 0;
+                bottom: 0;
+                width: 250px;
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 20px 10px;
+                border-top: none;
+                border-right: 1px solid var(--border);
+                background: var(--bg-card);
+            }
+            .phone-frame.desktop-view .nav-item{
+                flex-direction: row;
+                justify-content: flex-start;
+                padding: 12px 16px;
+                margin: 4px 0;
+                border-radius: 8px;
+                width: 100%;
+                gap: 12px;
+            }
+            .phone-frame.desktop-view .nav-item .nav-icon{
+                font-size: 20px;
+            }
+            .phone-frame.desktop-view .nav-item.active{
+                background: var(--accent-light);
             }
         }
 
@@ -466,8 +562,13 @@
 </head>
 <body>
 
+    <!-- Переключатель версий -->
+    <div class="view-switcher">
+        <button onclick="toggleView()" id="viewBtn">🖥️ ПК версия</button>
+    </div>
+
     <!-- PHONE FRAME -->
-    <div class="phone-frame">
+    <div class="phone-frame mobile-view" id="phoneFrame">
         <div class="phone-screen" id="phoneScreen">
 
             <!-- Dynamic Island -->
@@ -529,6 +630,27 @@
 
     <script>
         let currentPage='dashboard';
+        let currentView = 'mobile'; // 'mobile' или 'desktop'
+
+        // Переключение между мобильной и десктопной версией
+        function toggleView() {
+            const phoneFrame = document.getElementById('phoneFrame');
+            const viewBtn = document.getElementById('viewBtn');
+            
+            if (currentView === 'mobile') {
+                phoneFrame.classList.remove('mobile-view');
+                phoneFrame.classList.add('desktop-view');
+                viewBtn.textContent = '📱 Мобильная версия';
+                currentView = 'desktop';
+            } else {
+                phoneFrame.classList.remove('desktop-view');
+                phoneFrame.classList.add('mobile-view');
+                viewBtn.textContent = '🖥️ ПК версия';
+                currentView = 'mobile';
+            }
+            
+            localStorage.setItem('viewMode', currentView);
+        }
 
         // Clock
         function updateClock(){
@@ -641,7 +763,16 @@
         function pageDocs(){return '<div class="page active"><div class="card" onclick="showToast(\'Открыто\',\'info\')" style="cursor:pointer;"><span style="font-size:32px;">🚀</span><div style="font-weight:700;font-size:16px;">Быстрый старт</div><div style="font-size:13px;color:var(--text-secondary);">Как начать за 5 минут</div></div><div class="card" onclick="showToast(\'Открыто\',\'info\')" style="cursor:pointer;"><span style="font-size:32px;">📘</span><div style="font-weight:700;font-size:16px;">API Reference</div><div style="font-size:13px;color:var(--text-secondary);">Полное описание методов</div></div><div class="card" onclick="showToast(\'Открыто\',\'info\')" style="cursor:pointer;"><span style="font-size:32px;">💡</span><div style="font-weight:700;font-size:16px;">Примеры</div><div style="font-size:13px;color:var(--text-secondary);">Готовые сценарии</div></div></div>';}
         function pageSupport(){return '<div class="page active"><div class="card"><div class="card-header"><h2>Новое обращение</h2></div><div class="field-group"><label>Тема</label><input type="text" placeholder="Опишите проблему..."></div><div class="field-group"><label>Сообщение</label><textarea rows="5" placeholder="Подробное описание..."></textarea></div><button class="btn btn-primary" onclick="showToast(\'Отправлено!\',\'success\')">📤 Отправить</button></div></div>';}
 
-        document.addEventListener('DOMContentLoaded',function(){renderPage('dashboard');});
+        // Восстановление состояния при загрузке
+        document.addEventListener('DOMContentLoaded',function(){
+            renderPage('dashboard');
+            
+            // Восстанавливаем режим просмотра
+            const savedView = localStorage.getItem('viewMode');
+            if (savedView === 'desktop') {
+                toggleView();
+            }
+        });
     </script>
 </body>
 </html>
