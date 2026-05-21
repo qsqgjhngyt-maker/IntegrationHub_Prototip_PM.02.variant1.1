@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#007AFF">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>IntegrationHub — iPhone 17 Pro Max</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/3617/3617320.png">
+    <style>
+        :root {
+            --bg-page: #F2F4F8;
+            --bg-card: #FFFFFF;
+            --bg-nav: #FFFFFF;
+            --border: #E5E7EB;
+            --border-light: #F3F4F6;
+            --accent: #3B82F6;
+            --accent-hover: #2563EB;
+            --accent-light: #EFF6FF;
+            --text-primary: #111827;
+            --text-secondary: #6B7280;
+            --text-label: #374151;
+            --text-hint: #9CA3AF;
+            --danger: #EF4444;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --purple: #8B5CF6;
+            --teal: #14B8A6;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 20px;
+            --radius-2xl: 24px;
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.06);
+            --shadow-lg: 0 20px 40px rgba(0,0,0,0.12);
+            --font: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+            --safe-bottom: env(safe-area-inset-bottom, 20px);
+            --nav-h: 64px;
+            --status-h: 54px;
+            --phone-width: 430px;
+            --phone-height: 932px;
+        }
+
+        .dark-theme {
+            --bg-page: #0F172A;
+            --bg-card: #1E293B;
+            --bg-nav: #1E293B;
+            --border: #334155;
+            --border-light: #1E293B;
+            --text-primary: #F1F5F9;
+            --text-secondary: #94A3B8;
+            --text-label: #CBD5E1;
+            --text-hint: #64748B;
+            --accent-light: #1E3A5F;
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
+        }
+        .dark-theme input,.dark-theme textarea,.dark-theme select{background:#0F172A;color:#F1F5F9;border-color:#334155;}
+        .dark-theme .tree-children{background:#0F172A;}
+        .dark-theme .tree-item:hover{background:#1E293B;}
+        .dark-theme .segment-control{background:#334155;}
+        .dark-theme .segment-btn.active{background:#1E293B;color:#F1F5F9;}
+        .dark-theme .checkbox-group:hover{background:#1E293B;}
+        .dark-theme .search-box{background:#0F172A;border-color:#334155;}
+        .dark-theme .search-box input{color:#F1F5F9;}
+        .dark-theme .btn-secondary{background:#1E293B;border-color:#334155;color:#F1F5F9;}
+        .dark-theme .toast{background:#1E293B;border-color:#334155;color:#F1F5F9;}
+        .dark-theme .modal{background:#1E293B;color:#F1F5F9;}
+        .dark-theme .modal input,.dark-theme .modal textarea{background:#0F172A;color:#F1F5F9;}
+        .dark-theme .notification-item:hover{background:#0F172A;}
+        .dark-theme .bottom-nav{background:#1E293B;border-color:#334155;}
+        .dark-theme .stat-card{background:#1E293B;border-color:#334155;}
+
+        *{margin:0;padding:0;box-sizing:border-box;}
+
+        body{
+            background:#1a1a2e;display:flex;align-items:center;justify-content:center;
+            min-height:100vh;font-family:var(--font);
+            padding:20px;-webkit-font-smoothing:antialiased;
+        }
+
+        /* КОРПУС ТЕЛЕФОНА */
+        .phone-frame{
+            width:var(--phone-width);height:var(--phone-height);
+            background:#0a0a0a;border-radius:50px;
+            padding:12px;position:relative;
+            box-shadow:
+                0 0 0 3px #1a1a1a,
+                0 0 0 6px #0d0d0d,
+                0 0 0 8px #1f1f1f,
+                0 0 0 10px #0a0a0a,
+                0 20px 60px rgba(0,0,0,0.5),
+                0 0 0 12px #2a2a2a,
+                inset 0 0 2px rgba(255,255,255,0.05);
+        }
+
+        /* ЭКРАН */
+        .phone-screen{
+            width:100%;height:100%;border-radius:42px;overflow:hidden;
+            background:var(--bg-page);position:relative;
+            display:flex;flex-direction:column;
+            box-shadow:inset 0 0 4px rgba(0,0,0,0.2);
+        }
+
+        /* ДИНАМИЧЕСКИЙ ОСТРОВ */
+        .dynamic-island{
+            position:absolute;top:10px;left:50%;transform:translateX(-50%);
+            width:126px;height:36px;background:#000;border-radius:22px;
+            z-index:1000;display:flex;align-items:center;justify-content:center;
+            gap:8px;padding:0 12px;
+            box-shadow:0 2px 8px rgba(0,0,0,0.3),inset 0 1px 1px rgba(255,255,255,0.1);
+        }
+        .dynamic-island .di-camera{
+            width:12px;height:12px;background:#1a1a2e;border-radius:50%;
+            border:2px solid #2a2a3e;position:relative;
+        }
+        .dynamic-island .di-camera::after{
+            content:'';position:absolute;top:2px;left:2px;
+            width:4px;height:4px;background:#3a3a5e;border-radius:50%;
+        }
+        .dynamic-island .di-sensor{
+            width:8px;height:8px;background:#1a1a2e;border-radius:50%;
+            border:1.5px solid #2a2a3e;
+        }
+
+        /* СТАТУС-БАР */
+        .status-bar{
+            height:54px;display:flex;align-items:flex-end;justify-content:space-between;
+            padding:0 28px 8px;font-size:14px;font-weight:600;color:var(--text-primary);
+            position:relative;z-index:50;flex-shrink:0;
+        }
+        .status-bar .time{font-size:15px;font-weight:700;margin-left:10px;}
+        .status-bar .icons{display:flex;gap:6px;align-items:center;font-size:13px;}
+
+        /* КОНТЕНТ-ОБЛАСТЬ */
+        .content-wrapper{flex:1;display:flex;flex-direction:column;overflow:hidden;position:relative;}
+
+        /* ХЕДЕР */
+        .header{
+            display:flex;align-items:center;justify-content:space-between;
+            padding:8px 20px 12px;gap:12px;flex-shrink:0;
+        }
+        .header h1{font-size:28px;font-weight:800;letter-spacing:-0.5px;line-height:1.1;color:var(--text-primary);}
+        .header .header-actions{display:flex;gap:8px;}
+
+        .icon-btn{
+            width:42px;height:42px;border-radius:50%;background:var(--bg-card);border:1px solid var(--border);
+            display:flex;align-items:center;justify-content:center;font-size:18px;
+            cursor:pointer;transition:all 0.2s;position:relative;box-shadow:var(--shadow-sm);
+        }
+        .icon-btn:active{transform:scale(0.94);}
+        .icon-btn .badge-dot{
+            position:absolute;top:8px;right:8px;width:8px;height:8px;
+            background:var(--danger);border-radius:50%;border:2px solid var(--bg-card);
+        }
+
+        /* ПОИСК */
+        .search-box{
+            display:flex;align-items:center;background:var(--bg-card);border:1px solid var(--border);
+            border-radius:var(--radius-xl);padding:12px 16px;gap:10px;margin:0 20px;
+            box-shadow:var(--shadow-sm);transition:all 0.2s;flex-shrink:0;
+        }
+        .search-box:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px rgba(59,130,246,0.1);}
+        .search-box input{border:none;background:transparent;outline:none;font-size:15px;font-family:var(--font);width:100%;color:var(--text-primary);}
+        .search-box .search-icon{font-size:16px;color:var(--text-hint);}
+
+        /* СКРОЛЛ-ОБЛАСТЬ */
+        .main-content{flex:1;padding:16px 20px 0;display:flex;flex-direction:column;gap:14px;overflow-y:auto;}
+
+        /* СТАТ-КАРТОЧКИ */
+        .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+        .stat-card{
+            background:var(--bg-card);border-radius:var(--radius-lg);padding:16px;
+            border:1px solid var(--border);display:flex;flex-direction:column;gap:6px;
+            box-shadow:var(--shadow-sm);transition:all 0.2s;
+        }
+        .stat-card:active{transform:scale(0.97);}
+        .stat-card .stat-icon{font-size:24px;}
+        .stat-card .stat-value{font-size:28px;font-weight:800;letter-spacing:-0.5px;color:var(--text-primary);}
+        .stat-card .stat-label{font-size:12px;color:var(--text-secondary);font-weight:500;}
+
+        /* КАРТОЧКИ */
+        .card{
+            background:var(--bg-card);border-radius:var(--radius-xl);padding:18px;
+            border:1px solid var(--border);display:flex;flex-direction:column;gap:14px;
+            box-shadow:var(--shadow-sm);transition:all 0.2s;
+        }
+        .card-header{display:flex;align-items:center;justify-content:space-between;gap:10px;}
+        .card-header h2{font-size:16px;font-weight:700;color:var(--text-primary);}
+        .badge{
+            font-size:11px;font-weight:600;padding:4px 10px;border-radius:20px;
+            background:var(--accent-light);color:var(--accent);white-space:nowrap;
+        }
+        .badge.green{background:#ECFDF5;color:#059669;}
+        .badge.orange{background:#FFF7ED;color:#EA580C;}
+        .badge.purple{background:#F5F3FF;color:#7C3AED;}
+
+        /* ТАБЛИЦА (адаптирована) */
+        .list-item{
+            display:flex;align-items:center;gap:12px;padding:12px 0;
+            border-bottom:1px solid var(--border-light);font-size:14px;
+        }
+        .list-item:last-child{border-bottom:none;}
+        .list-item .item-icon-box{width:40px;height:40px;border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+        .list-item .item-info{flex:1;min-width:0;}
+        .list-item .item-title{font-weight:600;font-size:14px;color:var(--text-primary);}
+        .list-item .item-sub{font-size:12px;color:var(--text-secondary);}
+        .list-item .item-right{text-align:right;flex-shrink:0;}
+        .list-item .item-status{font-size:11px;font-weight:600;}
+
+        /* ПОЛЯ */
+        .field-group{display:flex;flex-direction:column;gap:4px;}
+        .field-group label{font-size:13px;font-weight:600;color:var(--text-label);}
+        .field-group label .required{color:var(--danger);}
+        input[type="text"],input[type="url"],textarea,select{
+            width:100%;padding:12px 14px;font-size:15px;font-family:var(--font);
+            color:var(--text-primary);background:#F8FAFC;border:1px solid var(--border);
+            border-radius:var(--radius-md);outline:none;transition:all 0.2s;
+        }
+        .dark-theme input[type="text"],.dark-theme textarea,.dark-theme select{background:#0F172A;color:#F1F5F9;}
+        input:focus,textarea:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(59,130,246,0.1);}
+        textarea{min-height:90px;resize:vertical;font-family:'SF Mono',monospace;font-size:14px;}
+        select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%236B7280' stroke-width='2'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:40px;}
+
+        /* СЕГМЕНТ-КОНТРОЛЬ */
+        .segment-control{display:flex;background:#F1F5F9;border-radius:var(--radius-md);padding:4px;gap:2px;}
+        .segment-btn{
+            flex:1;padding:10px 16px;font-size:14px;font-weight:600;border:none;
+            background:transparent;color:var(--text-secondary);border-radius:10px;
+            cursor:pointer;transition:all 0.2s;font-family:var(--font);text-align:center;
+        }
+        .segment-btn.active{background:#fff;color:var(--text-primary);box-shadow:0 1px 3px rgba(0,0,0,0.1);}
+
+        /* ЧЕКБОКСЫ */
+        .checkbox-group{display:flex;align-items:flex-start;gap:10px;cursor:pointer;padding:10px 14px;border-radius:var(--radius-sm);transition:background 0.2s;margin:0 -14px;}
+        .checkbox-group:hover{background:#F8FAFC;}
+        .checkbox-group input[type="checkbox"]{appearance:none;width:22px;height:22px;min-width:22px;border:2px solid var(--border);border-radius:6px;background:#fff;cursor:pointer;position:relative;}
+        .checkbox-group input[type="checkbox"]:checked{background:var(--accent);border-color:var(--accent);}
+        .checkbox-group input[type="checkbox"]:checked::after{content:'';position:absolute;top:3px;left:7px;width:6px;height:11px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg);}
+        .checkbox-label{font-size:14px;line-height:1.4;color:var(--text-primary);}
+        .checkbox-hint{display:block;font-size:12px;color:var(--text-hint);margin-top:2px;}
+
+        /* ДЕРЕВО */
+        .tree-container{border:1px solid var(--border);border-radius:var(--radius-md);overflow:hidden;}
+        .tree-item{display:flex;align-items:center;padding:12px 14px;gap:10px;border-bottom:1px solid var(--border-light);cursor:pointer;transition:background 0.2s;}
+        .tree-item:hover{background:#F8FAFC;}
+        .tree-item .chevron{font-size:10px;transition:transform 0.25s;color:var(--text-hint);flex-shrink:0;width:20px;text-align:center;}
+        .tree-item.expanded .chevron{transform:rotate(90deg);}
+        .tree-item .tree-icon{width:36px;height:36px;background:#EEF2FF;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+        .tree-content{flex:1;min-width:0;}
+        .tree-name{font-size:14px;font-weight:600;color:var(--text-primary);}
+        .tree-meta{font-size:12px;color:var(--text-hint);}
+        .tree-badge{font-size:10px;padding:3px 8px;border-radius:12px;background:#F1F5F9;color:var(--text-secondary);white-space:nowrap;}
+        .tree-delete{opacity:0;width:28px;height:28px;border-radius:6px;border:none;background:transparent;cursor:pointer;font-size:14px;color:var(--danger);transition:all 0.2s;display:flex;align-items:center;justify-content:center;}
+        .tree-item:active .tree-delete,.tree-item:active .tree-delete{opacity:1;}
+        .tree-delete:active{background:#FEE2E2;transform:scale(0.9);}
+        .tree-children{display:none;background:#FAFBFC;border-top:1px solid var(--border-light);}
+        .tree-children.open{display:block;animation:slideDown 0.25s ease;}
+        @keyframes slideDown{from{opacity:0;max-height:0;}to{opacity:1;max-height:300px;}}
+        .tree-children .tree-item{padding-left:40px;}
+
+        /* КНОПКИ */
+        .btn{
+            padding:14px 20px;font-size:15px;font-weight:600;border-radius:var(--radius-md);
+            cursor:pointer;transition:all 0.2s;font-family:var(--font);border:none;
+            display:flex;align-items:center;justify-content:center;gap:6px;width:100%;
+        }
+        .btn:active{transform:scale(0.96);}
+        .btn-primary{background:var(--accent);color:#fff;}
+        .btn-secondary{background:var(--bg-card);border:1px solid var(--border);color:var(--text-primary);}
+        .btn-tertiary{background:transparent;color:var(--text-secondary);}
+        .btn-danger{background:transparent;color:var(--danger);border:1px solid var(--danger);}
+        .btn-sm{padding:8px 14px;font-size:13px;width:auto;}
+        .btn-add{
+            display:flex;align-items:center;justify-content:center;gap:6px;font-size:14px;
+            font-weight:600;color:var(--accent);padding:12px;border:1.5px dashed var(--border);
+            border-radius:var(--radius-md);cursor:pointer;transition:all 0.2s;font-family:var(--font);width:100%;
+        }
+        .btn-add:active{background:#F0F7FF;border-color:var(--accent);}
+
+        .actions{display:flex;flex-direction:column;gap:8px;}
+        .actions-row{display:flex;gap:8px;}
+
+        /* СТАТУС */
+        .status-dot{width:10px;height:10px;border-radius:50%;display:inline-block;}
+        .status-dot.success{background:var(--success);}
+        .status-dot.error{background:var(--danger);}
+        .status-dot.checking{background:var(--accent);animation:pulse 0.8s infinite;}
+        @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.3;}}
+
+        .divider{height:1px;background:var(--border-light);}
+
+        /* ТОСТЫ */
+        .toast-container{position:absolute;top:60px;left:50%;transform:translateX(-50%);z-index:9999;display:flex;flex-direction:column;gap:8px;width:90%;max-width:380px;pointer-events:none;}
+        .toast{
+            background:var(--bg-card);border-radius:var(--radius-lg);padding:14px 18px;
+            box-shadow:var(--shadow-lg);display:flex;align-items:center;gap:10px;
+            font-size:14px;font-weight:600;border:1px solid var(--border);
+            pointer-events:auto;animation:toastIn 0.3s ease;
+        }
+        @keyframes toastIn{from{opacity:0;transform:translateY(-20px);}to{opacity:1;transform:translateY(0);}}
+        .toast.success{border-left:4px solid var(--success);}
+        .toast.error{border-left:4px solid var(--danger);}
+        .toast.info{border-left:4px solid var(--accent);}
+        .toast .toast-close{margin-left:auto;background:none;border:none;font-size:16px;color:var(--text-hint);cursor:pointer;}
+
+        /* МОДАЛКИ */
+        .modal-overlay{
+            position:absolute;inset:0;background:rgba(0,0,0,0.5);z-index:200;
+            display:flex;align-items:flex-end;justify-content:center;
+            animation:fadeIn 0.2s ease;border-radius:42px;overflow:hidden;
+        }
+        @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+        .modal-overlay.hidden{display:none;}
+        .modal{
+            background:var(--bg-card);border-radius:34px 34px 0 0;
+            padding:24px 20px 30px;width:100%;max-height:80%;
+            overflow-y:auto;box-shadow:var(--shadow-lg);
+            display:flex;flex-direction:column;gap:16px;animation:slideUp 0.35s cubic-bezier(0.16,1,0.3,1);
+        }
+        @keyframes slideUp{from{transform:translateY(100%);}to{transform:translateY(0);}}
+        .modal h3{font-size:18px;font-weight:700;text-align:center;color:var(--text-primary);}
+        .modal-handle{width:36px;height:5px;background:#D1D5DB;border-radius:3px;margin:0 auto 8px;}
+        .modal-actions{display:flex;flex-direction:column;gap:8px;}
+
+        /* НИЖНЯЯ НАВИГАЦИЯ */
+        .bottom-nav{
+            display:flex;padding:6px 8px 0;border-top:1px solid var(--border);
+            background:var(--bg-nav);flex-shrink:0;
+            backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+        }
+        .nav-item{
+            flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;
+            padding:8px 4px 4px;border-radius:var(--radius-md);cursor:pointer;
+            transition:all 0.2s;font-size:10px;font-weight:600;color:var(--text-hint);
+            border:none;background:none;font-family:var(--font);
+        }
+        .nav-item.active{color:var(--accent);}
+        .nav-item .nav-icon{font-size:22px;}
+        .nav-item:active{background:var(--accent-light);}
+
+        /* ИНДИКАТОР HOME */
+        .home-indicator{
+            width:134px;height:5px;background:#0a0a0a;border-radius:3px;
+            margin:8px auto 0;
+        }
+        .dark-theme .home-indicator{background:#fff;}
+
+        /* ПРОФИЛЬ */
+        .avatar-lg{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,#6366F1,#8B5CF6);color:#fff;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:800;margin:0 auto;}
+        .profile-menu-item{display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:var(--radius-md);cursor:pointer;font-size:15px;font-weight:500;color:var(--text-primary);transition:background 0.2s;}
+        .profile-menu-item:active{background:#F3F4F6;}
+        .profile-menu-item .menu-icon{font-size:20px;width:24px;text-align:center;}
+
+        /* УВЕДОМЛЕНИЯ */
+        .notification-item{display:flex;align-items:flex-start;gap:12px;padding:14px 16px;border-radius:var(--radius-md);cursor:pointer;transition:background 0.2s;}
+        .notification-item:active{background:#F3F4F6;}
+        .notification-item.unread{border-left:3px solid var(--accent);padding-left:13px;}
+        .notification-item .notif-icon{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+        .notification-item .notif-content{flex:1;}
+        .notification-item .notif-title{font-size:14px;font-weight:600;color:var(--text-primary);}
+        .notification-item .notif-desc{font-size:12px;color:var(--text-secondary);margin-top:2px;}
+        .notification-item .notif-time{font-size:11px;color:var(--text-hint);white-space:nowrap;}
+
+        /* СТРАНИЦЫ */
+        .page{display:none;flex-direction:column;gap:14px;}
+        .page.active{display:flex;}
+
+        /* СКРОЛЛ */
+        ::-webkit-scrollbar{width:0;height:0;}
+    </style>
+</head>
+<body>
+
+    <!-- КОРПУС ТЕЛЕФОНА -->
+    <div class="phone-frame">
+        <div class="phone-screen" id="phoneScreen">
+
+            <!-- Dynamic Island -->
+            <div class="dynamic-island">
+                <div class="di-camera"></div>
+                <div class="di-sensor"></div>
+            </div>
+
+            <!-- Status Bar -->
+            <div class="status-bar">
+                <span class="time">9:41</span>
+                <span class="icons">
+                    <span style="font-size:13px;">5G</span>
+                    <span style="font-size:14px;">📶</span>
+                    <span style="font-size:14px;">📡</span>
+                    <span style="font-size:16px;">🔋</span>
+                </span>
+            </div>
+
+            <!-- Контент -->
+            <div class="content-wrapper">
+                <div class="header">
+                    <h1 id="pageTitle">Дашборд</h1>
+                    <div class="header-actions">
+                        <button class="icon-btn" onclick="toggleTheme()" title="Тема">🌓</button>
+                        <button class="icon-btn" onclick="openNotifications()" title="Уведомления">
+                            🔔<span class="badge-dot" id="notifDot"></span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="search-box">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" placeholder="Поиск по интеграциям..." id="globalSearch" onkeydown="if(event.key==='Enter')searchGlobal()">
+                </div>
+
+                <div class="main-content" id="mainContent"></div>
+
+                <!-- Нижняя навигация -->
+                <div class="bottom-nav" id="bottomNav">
+                    <button class="nav-item active" data-page="dashboard" onclick="switchTab(this)"><span class="nav-icon">📊</span>Дашборд</button>
+                    <button class="nav-item" data-page="integrations" onclick="switchTab(this)"><span class="nav-icon">🔗</span>Интеграции</button>
+                    <button class="nav-item" data-page="connections" onclick="switchTab(this)"><span class="nav-icon">🔌</span>Связи</button>
+                    <button class="nav-item" data-page="objects" onclick="switchTab(this)"><span class="nav-icon">📦</span>Объекты</button>
+                    <button class="nav-item" data-page="more" onclick="switchTab(this)"><span class="nav-icon">⋯</span>Ещё</button>
+                </div>
+
+                <!-- Home Indicator -->
+                <div class="home-indicator"></div>
+            </div>
+
+            <!-- Тосты -->
+            <div class="toast-container" id="toastContainer"></div>
+
+            <!-- Модалки -->
+            <div class="modal-overlay hidden" id="globalModal"><div class="modal" id="globalModalContent"></div></div>
+        </div>
+    </div>
+
+    <script>
+        let currentPage='dashboard';
+
+        function showToast(msg,type){
+            const c=document.getElementById('toastContainer');
+            const t=document.createElement('div');
+            t.className='toast '+type;
+            t.innerHTML='<span>'+(type==='success'?'✅':type==='error'?'❌':'ℹ️')+'</span><span>'+msg+'</span><button class="toast-close" onclick="this.parentElement.remove()">✕</button>';
+            c.appendChild(t);
+            setTimeout(()=>{t.style.opacity='0';t.style.transition='opacity 0.3s';setTimeout(()=>t.remove(),300);},3000);
+        }
+        function searchGlobal(){const q=document.getElementById('globalSearch').value.trim();if(q)showToast('Поиск: «'+q+'»','info');}
+        function closeModal(){document.getElementById('globalModal').classList.add('hidden');}
+        document.getElementById('globalModal').addEventListener('click',function(e){if(e.target===this)closeModal();});
+
+        function toggleTheme(){
+            document.getElementById('phoneScreen').classList.toggle('dark-theme');
+            const d=document.getElementById('phoneScreen').classList.contains('dark-theme');
+            localStorage.setItem('theme',d?'dark':'light');
+        }
+        if(localStorage.getItem('theme')==='dark')document.getElementById('phoneScreen').classList.add('dark-theme');
+
+        function switchTab(btn){
+            document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active'));
+            btn.classList.add('active');
+            const page=btn.dataset.page;
+            document.getElementById('pageTitle').textContent=btn.textContent.trim();
+            renderPage(page);
+        }
+
+        function openProfile(){
+            const m=document.getElementById('globalModal');
+            document.getElementById('globalModalContent').innerHTML='<div class="modal-handle"></div><div class="avatar-lg">АК</div><h3>Алексей Кузнецов</h3><p style="text-align:center;color:var(--text-secondary);font-size:14px;">Администратор системы</p><div class="divider"></div><div class="field-group"><label>Имя</label><input type="text" value="Алексей"></div><div class="field-group"><label>Фамилия</label><input type="text" value="Кузнецов"></div><div class="field-group"><label>Email</label><input type="text" value="a.kuznetsov@company.ru"></div><div class="field-group"><label>Должность</label><input type="text" value="Администратор"></div><div class="field-group"><label>Телефон</label><input type="text" value="+7 (999) 123-45-67"></div><div class="field-group"><label>Часовой пояс</label><select><option>UTC+3 (Москва)</option></select></div><label class="checkbox-group"><input type="checkbox" checked><span class="checkbox-label">Уведомления на email</span></label><label class="checkbox-group"><input type="checkbox"><span class="checkbox-label">Двухфакторная аутентификация</span></label><div class="divider"></div><div class="field-group"><label>Новый пароль</label><input type="text" placeholder="Введите новый пароль"></div><div class="field-group"><label>Подтверждение</label><input type="text" placeholder="Повторите пароль"></div><div class="modal-actions"><button class="btn btn-primary" onclick="closeModal();showToast(\'Профиль обновлён\',\'success\')">💾 Сохранить</button><button class="btn btn-danger" onclick="closeModal();showToast(\'Профиль удалён (демо)\',\'error\')">🗑 Удалить аккаунт</button><button class="btn btn-tertiary" onclick="closeModal()">Отмена</button></div>';
+            m.classList.remove('hidden');
+        }
+
+        function openNotifications(){
+            const m=document.getElementById('globalModal');
+            document.getElementById('globalModalContent').innerHTML='<div class="modal-handle"></div><h3>🔔 Уведомления</h3><div class="notification-item unread"><div class="notif-icon" style="background:#EEF2FF;">✅</div><div class="notif-content"><div class="notif-title">Синхронизация завершена</div><div class="notif-desc">Salesforce: импортировано 247 лидов</div></div><div class="notif-time">2 мин</div></div><div class="notification-item unread"><div class="notif-icon" style="background:#FEF3C7;">⚠️</div><div class="notif-content"><div class="notif-title">Задержка синхронизации</div><div class="notif-desc">Pipedrive: превышен лимит</div></div><div class="notif-time">15 мин</div></div><div class="notification-item"><div class="notif-icon" style="background:#ECFDF5;">🔑</div><div class="notif-content"><div class="notif-title">API-ключ обновлён</div><div class="notif-desc">Production ключ продлён</div></div><div class="notif-time">1 час</div></div><div class="notification-item"><div class="notif-icon" style="background:#FEE2E2;">❌</div><div class="notif-content"><div class="notif-title">Ошибка вебхука</div><div class="notif-desc">Shopify: 500 Error</div></div><div class="notif-time">3 часа</div></div><div class="notification-item"><div class="notif-icon" style="background:#EEF2FF;">📊</div><div class="notif-content"><div class="notif-title">Еженедельный отчёт</div><div class="notif-desc">Готов к скачиванию</div></div><div class="notif-time">1 день</div></div><div class="notification-item"><div class="notif-icon" style="background:#F3F4F6;">ℹ️</div><div class="notif-content"><div class="notif-title">Обновление системы</div><div class="notif-desc">v2.4.1 запланировано</div></div><div class="notif-time">2 дня</div></div><div class="modal-actions"><button class="btn btn-primary" onclick="closeModal();showToast(\'Все прочитаны\',\'success\')">✅ Прочитать всё</button><button class="btn btn-tertiary" onclick="closeModal()">Закрыть</button></div>';
+            document.getElementById('notifDot').style.display='none';
+            m.classList.remove('hidden');
+        }
+
+        function openMoreMenu(){
+            const m=document.getElementById('globalModal');
+            document.getElementById('globalModalContent').innerHTML='<div class="modal-handle"></div><div class="avatar-lg" style="margin-bottom:8px;">АК</div><h3>Алексей Кузнецов</h3><p style="text-align:center;color:var(--text-secondary);font-size:13px;">Администратор</p><div class="divider"></div><div class="profile-menu-item" onclick="closeModal();switchPageContent(\'config\');"><span class="menu-icon">⚙️</span>Конфигурация</div><div class="profile-menu-item" onclick="closeModal();switchPageContent(\'apikeys\');"><span class="menu-icon">🔑</span>API-ключи</div><div class="profile-menu-item" onclick="closeModal();switchPageContent(\'logs\');"><span class="menu-icon">📝</span>Логи</div><div class="profile-menu-item" onclick="closeModal();switchPageContent(\'webhooks\');"><span class="menu-icon">🪝</span>Webhooks</div><div class="profile-menu-item" onclick="closeModal();switchPageContent(\'docs\');"><span class="menu-icon">📖</span>Документация</div><div class="profile-menu-item" onclick="closeModal();switchPageContent(\'support\');"><span class="menu-icon">💬</span>Поддержка</div><div class="divider"></div><div class="profile-menu-item" onclick="closeModal();openProfile();"><span class="menu-icon">👤</span>Профиль</div><div class="profile-menu-item" onclick="closeModal();toggleTheme();"><span class="menu-icon">🌓</span>Переключить тему</div>';
+            m.classList.remove('hidden');
+        }
+
+        function switchPageContent(page){
+            document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active'));
+            document.getElementById('pageTitle').textContent={'config':'Конфигурация','apikeys':'API-ключи','logs':'Логи','webhooks':'Webhooks','docs':'Документация','support':'Поддержка'}[page]||page;
+            renderPage(page);
+        }
+
+        function switchSeg(btn,name){btn.parentElement.querySelectorAll('.segment-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');const badge=document.getElementById('connTypeBadge');if(badge)badge.textContent=name;}
+        function toggleTree(el){const ch=el.nextElementSibling;if(ch&&ch.classList.contains('tree-children')){ch.classList.toggle('open');el.classList.toggle('expanded');}}
+        function delTree(e,btn){e.stopPropagation();const item=btn.closest('.tree-item');const ch=item.nextElementSibling;if(ch&&ch.classList.contains('tree-children'))ch.remove();item.remove();updateTreeBadge();}
+        function addTreeItem(){const id=Date.now().toString().slice(-4);const c=document.getElementById('treeContainer');if(!c)return;const item=document.createElement('div');item.className='tree-item';item.setAttribute('onclick','toggleTree(this)');item.innerHTML='<span class="chevron">▶</span><span class="tree-icon">📦</span><div class="tree-content"><span class="tree-name">Новый #'+id+'</span></div><span class="tree-badge">0 полей</span><button class="tree-delete" onclick="delTree(event,this)">✕</button>';const ch=document.createElement('div');ch.className='tree-children';ch.innerHTML='<div class="tree-item"><span class="chevron" style="visibility:hidden;">▶</span><span class="tree-icon">📛</span><div class="tree-content"><span class="tree-name">Название</span></div><button class="tree-delete" onclick="delTree(event,this)">✕</button></div>';c.appendChild(item);c.appendChild(ch);updateTreeBadge();showToast('Объект добавлен','success');}
+        function updateTreeBadge(){const all=document.querySelectorAll('#treeContainer .tree-item');const badge=document.getElementById('nestedCountBadge');if(badge)badge.textContent=all.length+' объекта';}
+        function checkConnStatus(){const dot=document.getElementById('statusDot');const txt=document.getElementById('statusText');const time=document.getElementById('statusTime');const badge=document.getElementById('statusBadge');if(!dot)return;dot.className='status-dot checking';txt.textContent='Проверка...';badge.textContent='Проверка';badge.className='badge orange';showToast('Проверка соединения...','info');setTimeout(()=>{const ok=Math.random()>0.1;if(ok){dot.className='status-dot success';txt.textContent='Подключено';time.textContent='· '+new Date().toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'});badge.textContent='Активно';badge.className='badge green';showToast('✅ Соединение успешно!','success');}else{dot.className='status-dot error';txt.textContent='Ошибка';badge.textContent='Ошибка';badge.className='badge orange';showToast('❌ Ошибка соединения!','error');}},1500);}
+        function saveConnSettings(name){const inp=document.getElementById('connName');const url=document.getElementById('connUrl');if(inp&&!inp.value.trim()){showToast('❌ Введите название связи!','error');return;}if(url&&!url.value.trim()){showToast('❌ Введите Endpoint URL!','error');return;}showToast('✅ «'+name+'» сохранена!','success');}
+        function resetConnForm(){['connName','connKey','connUrl','connHeaders','connBody'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});['connAsync','connNested','connLog'].forEach(id=>{const el=document.getElementById(id);if(el)el.checked=false;});showToast('🔄 Поля сброшены','info');}
+        function openConnectionSettings(name,integration){document.getElementById('pageTitle').textContent='Настройка связи';document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active'));document.getElementById('mainContent').innerHTML=pageConnectionSettings(name,integration);}
+
+        function renderPage(page){
+            currentPage=page;const area=document.getElementById('mainContent');
+            if(page==='dashboard')area.innerHTML=pageDashboard();
+            else if(page==='integrations')area.innerHTML=pageIntegrations();
+            else if(page==='connections')area.innerHTML=pageConnections();
+            else if(page==='objects')area.innerHTML=pageObjects();
+            else if(page==='config')area.innerHTML=pageConfig();
+            else if(page==='apikeys')area.innerHTML=pageApiKeys();
+            else if(page==='logs')area.innerHTML=pageLogs();
+            else if(page==='webhooks')area.innerHTML=pageWebhooks();
+            else if(page==='docs')area.innerHTML=pageDocs();
+            else if(page==='support')area.innerHTML=pageSupport();
+            else if(page==='more'){openMoreMenu();return;}
+            if(page==='integrations'||page==='connections')bindEditButtons();
+            area.scrollTop=0;
+        }
+
+        function bindEditButtons(){
+            document.querySelectorAll('.btn-edit-conn').forEach(btn=>{
+                btn.onclick=function(){openConnectionSettings(btn.dataset.name,btn.dataset.integration);};
+            });
+        }
+
+        function pageDashboard(){return '<div class="page active"><div class="stats-grid"><div class="stat-card"><span class="stat-icon">🔗</span><span class="stat-value">4</span><span class="stat-label">Активных интеграций</span></div><div class="stat-card"><span class="stat-icon">🔌</span><span class="stat-value">12</span><span class="stat-label">Связей</span></div><div class="stat-card"><span class="stat-icon">📦</span><span class="stat-value">8</span><span class="stat-label">Типов объектов</span></div><div class="stat-card"><span class="stat-icon">✅</span><span class="stat-value">99.8%</span><span class="stat-label">Uptime</span></div></div><div class="card"><div class="card-header"><h2>Последние события</h2><span class="badge green">24ч</span></div><div class="list-item"><div class="item-icon-box" style="background:#EEF2FF;">✅</div><div class="item-info"><div class="item-title">Синхронизация лидов</div><div class="item-sub">Salesforce</div></div><div class="item-right"><div class="item-status" style="color:var(--success);">Успех</div><div style="font-size:11px;color:var(--text-hint);">5 мин</div></div></div><div class="list-item"><div class="item-icon-box" style="background:#EEF2FF;">✅</div><div class="item-info"><div class="item-title">Обновление контактов</div><div class="item-sub">HubSpot</div></div><div class="item-right"><div class="item-status" style="color:var(--success);">Успех</div><div style="font-size:11px;color:var(--text-hint);">23 мин</div></div></div><div class="list-item"><div class="item-icon-box" style="background:#FEF3C7;">⚠️</div><div class="item-info"><div class="item-title">Импорт сделок</div><div class="item-sub">Pipedrive</div></div><div class="item-right"><div class="item-status" style="color:var(--warning);">Задержка</div><div style="font-size:11px;color:var(--text-hint);">1 час</div></div></div><div class="list-item"><div class="item-icon-box" style="background:#FEE2E2;">❌</div><div class="item-info"><div class="item-title">Вебхук заказов</div><div class="item-sub">Shopify</div></div><div class="item-right"><div class="item-status" style="color:var(--danger);">Ошибка</div><div style="font-size:11px;color:var(--text-hint);">3 часа</div></div></div></div></div>';}
+
+        function pageIntegrations(){return '<div class="page active"><div class="card"><div class="card-header"><h2>🔗 Salesforce</h2><span class="badge green">Активна</span></div><div style="font-size:13px;color:var(--text-secondary);display:flex;gap:16px;flex-wrap:wrap;"><span>CRM</span><span>3 объекта</span><span>5 мин</span></div><div class="actions-row"><button class="btn btn-sm btn-secondary btn-edit-conn" data-name="Импорт лидов из Salesforce" data-integration="Salesforce">⚙️ Связи</button><button class="btn btn-sm btn-tertiary" onclick="showToast(\'Пауза\',\'info\')">⏸</button></div></div><div class="card"><div class="card-header"><h2>🔗 HubSpot</h2><span class="badge green">Активна</span></div><div style="font-size:13px;color:var(--text-secondary);display:flex;gap:16px;flex-wrap:wrap;"><span>Маркетинг</span><span>2 объекта</span><span>23 мин</span></div><div class="actions-row"><button class="btn btn-sm btn-secondary btn-edit-conn" data-name="Синхронизация контактов HubSpot" data-integration="HubSpot">⚙️ Связи</button><button class="btn btn-sm btn-tertiary" onclick="showToast(\'Пауза\',\'info\')">⏸</button></div></div><div class="card"><div class="card-header"><h2>🔗 Pipedrive</h2><span class="badge orange">Задержка</span></div><div style="font-size:13px;color:var(--text-secondary);display:flex;gap:16px;flex-wrap:wrap;"><span>CRM</span><span>1 объект</span><span>1 час</span></div><div class="actions-row"><button class="btn btn-sm btn-secondary btn-edit-conn" data-name="Импорт сделок Pipedrive" data-integration="Pipedrive">⚙️ Связи</button><button class="btn btn-sm btn-tertiary" onclick="showToast(\'Повтор\',\'info\')">🔄</button></div></div><div class="card"><div class="card-header"><h2>🔗 Shopify</h2><span class="badge green">Активна</span></div><div style="font-size:13px;color:var(--text-secondary);display:flex;gap:16px;flex-wrap:wrap;"><span>E-com</span><span>2 объекта</span><span>3 часа</span></div><div class="actions-row"><button class="btn btn-sm btn-secondary btn-edit-conn" data-name="Вебхук заказов Shopify" data-integration="Shopify">⚙️ Связи</button><button class="btn btn-sm btn-tertiary" onclick="showToast(\'Пауза\',\'info\')">⏸</button></div></div></div>';}
+
+        function pageConnections(){return '<div class="page active"><div class="card"><div class="card-header"><h2>🔗 Импорт лидов Salesforce</h2><span class="badge green">Активна</span></div><div style="font-size:13px;color:var(--text-secondary);">Объект: Лид · Ключ: email · POST</div><button class="btn btn-sm btn-primary btn-edit-conn" data-name="Импорт лидов из Salesforce" data-integration="Salesforce">⚙️ Редактировать связь</button></div><div class="card"><div class="card-header"><h2>🔗 Контакты HubSpot</h2><span class="badge green">Активна</span></div><div style="font-size:13px;color:var(--text-secondary);">Объект: Контакт · Ключ: email · PUT</div><button class="btn btn-sm btn-primary btn-edit-conn" data-name="Синхронизация контактов HubSpot" data-integration="HubSpot">⚙️ Редактировать связь</button></div><div class="card"><div class="card-header"><h2>🔗 Сделки Pipedrive</h2><span class="badge orange">Задержка</span></div><div style="font-size:13px;color:var(--text-secondary);">Объект: Сделка · Ключ: deal_id · POST</div><button class="btn btn-sm btn-primary btn-edit-conn" data-name="Импорт сделок Pipedrive" data-integration="Pipedrive">⚙️ Редактировать связь</button></div><div class="card"><div class="card-header"><h2>🔗 Заказы Shopify</h2><span class="badge green">Активна</span></div><div style="font-size:13px;color:var(--text-secondary);">Объект: Заказ · Ключ: order_id · POST</div><button class="btn btn-sm btn-primary btn-edit-conn" data-name="Вебхук заказов Shopify" data-integration="Shopify">⚙️ Редактировать связь</button></div></div>';}
+
+        function pageConnectionSettings(name,integration){return '<div class="page active"><div class="card"><div class="card-header"><h2>Тип связи</h2><span class="badge" id="connTypeBadge">Интеграция</span></div><div class="segment-control"><button class="segment-btn active" onclick="switchSeg(this,\'Интеграция\')">🔗 Интеграция</button><button class="segment-btn" onclick="switchSeg(this,\'Ручная\')">📝 Ручная</button></div><div class="divider"></div><div class="card-header"><h2>Основные параметры</h2></div><div class="field-group"><label>Название связи <span class="required">*</span></label><input type="text" id="connName" value="'+name+'"></div><div class="field-group"><label>Тип объекта</label><select id="connObj"><option>Контакт</option><option>Сделка</option><option selected>Лид</option><option>Компания</option></select></div><div class="field-group"><label>Ключ сопоставления</label><input type="text" id="connKey" value="email"></div></div><div class="card"><div class="card-header"><h2>Настройки интеграции</h2><span class="badge">'+integration+'</span></div><div class="field-group"><label>HTTP метод</label><select id="connMethod"><option>GET</option><option selected>POST</option><option>PUT</option><option>PATCH</option></select></div><div class="field-group"><label>Endpoint URL <span class="required">*</span></label><input type="url" id="connUrl" value="https://api.example.com/v1/data"></div><div class="field-group"><label>Заголовки</label><textarea id="connHeaders" rows="3">Content-Type: application/json\nAuthorization: Bearer {{token}}</textarea></div><div class="field-group"><label>Тело запроса (JSON)</label><textarea id="connBody" rows="4">{"FirstName":"{{contact.first_name}}"}</textarea></div><label class="checkbox-group"><input type="checkbox" id="connAsync" checked><span class="checkbox-label">Асинхронный режим</span></label><label class="checkbox-group"><input type="checkbox" id="connNested" checked><span class="checkbox-label">Вложенные объекты</span></label><label class="checkbox-group"><input type="checkbox" id="connLog"><span class="checkbox-label">Логировать</span></label></div><div class="card"><div class="card-header"><h2>Вложенные объекты</h2><span class="badge" id="nestedCountBadge">4 объекта</span></div><div class="tree-container" id="treeContainer"><div class="tree-item expanded" onclick="toggleTree(this)"><span class="chevron">▶</span><span class="tree-icon">📦</span><div class="tree-content"><span class="tree-name">Контактные данные</span><span class="tree-meta">Тип: Объект</span></div><span class="tree-badge">2 поля</span><button class="tree-delete" onclick="delTree(event,this)">✕</button></div><div class="tree-children open"><div class="tree-item"><span class="chevron" style="visibility:hidden;">▶</span><span class="tree-icon">📞</span><div class="tree-content"><span class="tree-name">Телефоны</span></div><button class="tree-delete" onclick="delTree(event,this)">✕</button></div><div class="tree-item"><span class="chevron" style="visibility:hidden;">▶</span><span class="tree-icon">📍</span><div class="tree-content"><span class="tree-name">Адреса</span></div><button class="tree-delete" onclick="delTree(event,this)">✕</button></div></div><div class="tree-item" onclick="toggleTree(this)"><span class="chevron">▶</span><span class="tree-icon">💼</span><div class="tree-content"><span class="tree-name">Связанные сделки</span></div><span class="tree-badge">2 поля</span><button class="tree-delete" onclick="delTree(event,this)">✕</button></div><div class="tree-children"><div class="tree-item"><span class="chevron" style="visibility:hidden;">▶</span><span class="tree-icon">💰</span><div class="tree-content"><span class="tree-name">Сумма</span></div><button class="tree-delete" onclick="delTree(event,this)">✕</button></div></div></div><button class="btn-add" onclick="addTreeItem()">+ Добавить вложенный объект</button></div><div class="card"><div class="card-header"><h2>Статус соединения</h2><span class="badge green" id="statusBadge">Активно</span></div><div style="display:flex;align-items:center;gap:8px;font-size:14px;"><span class="status-dot success" id="statusDot"></span><span id="statusText">Подключено</span><span style="color:var(--text-secondary);font-size:12px;" id="statusTime">· Только что</span></div></div><div class="actions"><button class="btn btn-primary" onclick="saveConnSettings(\''+name+'\')">✅ Сохранить</button><button class="btn btn-secondary" onclick="checkConnStatus()">🔍 Проверить</button><button class="btn btn-tertiary" onclick="resetConnForm()">🔄 Сбросить</button></div></div>';}
+
+        function pageObjects(){return '<div class="page active"><div class="card"><div class="card-header"><h2>📦 Лид</h2><span class="badge">Системный</span></div><div style="font-size:13px;color:var(--text-secondary);">Имя, Фамилия, Email, Телефон, Компания, Статус, Источник</div></div><div class="card"><div class="card-header"><h2>📦 Контакт</h2><span class="badge">Системный</span></div><div style="font-size:13px;color:var(--text-secondary);">Имя, Фамилия, Email, Телефон, Адрес, День рождения</div></div><div class="card"><div class="card-header"><h2>📦 Сделка</h2><span class="badge">Системный</span></div><div style="font-size:13px;color:var(--text-secondary);">Название, Сумма, Этап, Дата закрытия</div></div><div class="card"><div class="card-header"><h2>📦 Компания</h2><span class="badge purple">Польз.</span></div><div style="font-size:13px;color:var(--text-secondary);">Название, ИНН, Адрес, Отрасль</div></div></div>';}
+        function pageConfig(){return '<div class="page active"><div class="card"><div class="card-header"><h2>Основные настройки</h2></div><div class="field-group"><label>Часовой пояс</label><select><option>UTC+3 (Москва)</option></select></div><div class="field-group"><label>Язык</label><select><option>Русский</option></select></div><label class="checkbox-group"><input type="checkbox" checked><span class="checkbox-label">Автосохранение</span></label><label class="checkbox-group"><input type="checkbox"><span class="checkbox-label">Режим отладки</span></label><button class="btn btn-primary" onclick="showToast(\'Сохранено\',\'success\')">✅ Сохранить</button></div></div>';}
+        function pageApiKeys(){return '<div class="page active"><div class="card"><div class="card-header"><h2>🔑 Production</h2><span class="badge green">Активен</span></div><div style="font-family:monospace;font-size:13px;background:#F8FAFC;padding:12px;border-radius:8px;">ih_prod_8a7b3c2d...</div><div style="font-size:12px;color:var(--text-secondary);">Создан: 12.03.2024</div></div><div class="card"><div class="card-header"><h2>🔑 Staging</h2><span class="badge green">Активен</span></div><div style="font-family:monospace;font-size:13px;background:#F8FAFC;padding:12px;border-radius:8px;">ih_stage_9b1c2d3e...</div><div style="font-size:12px;color:var(--text-secondary);">Создан: 05.01.2024</div></div><button class="btn btn-primary" onclick="showToast(\'Ключ сгенерирован\',\'success\')">+ Сгенерировать</button></div>';}
+        function pageLogs(){return '<div class="page active"><div class="card"><div class="card-header"><h2>Логи</h2><span class="badge">24ч</span></div><div class="list-item"><div class="item-icon-box" style="background:#ECFDF5;">✅</div><div class="item-info"><div class="item-title">Salesforce</div><div class="item-sub">Синхронизация</div></div><div class="item-right"><span style="color:var(--success);font-weight:600;">200</span><div style="font-size:11px;color:var(--text-hint);">10:32</div></div></div><div class="list-item"><div class="item-icon-box" style="background:#ECFDF5;">✅</div><div class="item-info"><div class="item-title">HubSpot</div><div class="item-sub">Обновление</div></div><div class="item-right"><span style="color:var(--success);font-weight:600;">200</span><div style="font-size:11px;color:var(--text-hint);">10:28</div></div></div><div class="list-item"><div class="item-icon-box" style="background:#FEF3C7;">⚠️</div><div class="item-info"><div class="item-title">Pipedrive</div><div class="item-sub">Импорт</div></div><div class="item-right"><span style="color:var(--warning);font-weight:600;">429</span><div style="font-size:11px;color:var(--text-hint);">10:15</div></div></div><div class="list-item"><div class="item-icon-box" style="background:#FEE2E2;">❌</div><div class="item-info"><div class="item-title">Shopify</div><div class="item-sub">Вебхук</div></div><div class="item-right"><span style="color:var(--danger);font-weight:600;">500</span><div style="font-size:11px;color:var(--text-hint);">09:58</div></div></div></div></div>';}
+        function pageWebhooks(){return '<div class="page active"><div class="card"><div class="card-header"><h2>🪝 Shopify — Заказы</h2><span class="badge green">Активен</span></div><div style="font-family:monospace;font-size:12px;background:#F8FAFC;padding:10px;border-radius:8px;">POST /webhooks/shopify/orders</div><div style="font-size:12px;color:var(--text-secondary);">Вызовов: 247</div></div><div class="card"><div class="card-header"><h2>🪝 Stripe — Платежи</h2><span class="badge green">Активен</span></div><div style="font-family:monospace;font-size:12px;background:#F8FAFC;padding:10px;border-radius:8px;">POST /webhooks/stripe/payments</div><div style="font-size:12px;color:var(--text-secondary);">Вызовов: 89</div></div><button class="btn btn-primary" onclick="showToast(\'Вебхук создан\',\'success\')">+ Добавить</button></div>';}
+        function pageDocs(){return '<div class="page active"><div class="card" onclick="showToast(\'Открыто\',\'info\')" style="cursor:pointer;"><span style="font-size:32px;">🚀</span><div style="font-weight:700;font-size:16px;">Быстрый старт</div><div style="font-size:13px;color:var(--text-secondary);">Как начать за 5 минут</div></div><div class="card" onclick="showToast(\'Открыто\',\'info\')" style="cursor:pointer;"><span style="font-size:32px;">📘</span><div style="font-weight:700;font-size:16px;">API Reference</div><div style="font-size:13px;color:var(--text-secondary);">Полное описание методов</div></div><div class="card" onclick="showToast(\'Открыто\',\'info\')" style="cursor:pointer;"><span style="font-size:32px;">💡</span><div style="font-weight:700;font-size:16px;">Примеры</div><div style="font-size:13px;color:var(--text-secondary);">Готовые сценарии</div></div></div>';}
+        function pageSupport(){return '<div class="page active"><div class="card"><div class="card-header"><h2>Новое обращение</h2></div><div class="field-group"><label>Тема</label><input type="text" placeholder="Опишите проблему..."></div><div class="field-group"><label>Сообщение</label><textarea rows="5" placeholder="Подробное описание..."></textarea></div><button class="btn btn-primary" onclick="showToast(\'Отправлено!\',\'success\')">📤 Отправить</button></div></div>';}
+
+        document.addEventListener('DOMContentLoaded',function(){renderPage('dashboard');});
+
+        // Регистрация Service Worker
+        if('serviceWorker' in navigator){
+            window.addEventListener('load',()=>{
+                navigator.serviceWorker.register('./sw.js')
+                .then(reg=>console.log('SW registered'))
+                .catch(err=>console.log('SW error',err));
+            });
+        }
+    </script>
+</body>
+</html>
