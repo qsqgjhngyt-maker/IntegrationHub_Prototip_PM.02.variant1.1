@@ -1,5 +1,15 @@
+# Системные файлы
 .DS_Store
+Thumbs.db
+
+# IDE
 .vscode/
-node_modules/
+.idea/
+
+# Логи и кэш
 *.log
-*.tmp
+npm-debug.log*
+
+# Локальные конфиги
+.env
+*.local
