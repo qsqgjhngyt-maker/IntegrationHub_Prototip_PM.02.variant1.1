@@ -100,13 +100,6 @@
                 display:flex;flex-direction:column;
                 box-shadow:inset 0 0 4px rgba(0,0,0,0.2);
             }
-            /* На ПК навигация внутри рамки */
-            .bottom-nav{
-                position: absolute;
-                left: 0;
-                right: 0;
-                width: 100%;
-            }
             .status-bar, .dynamic-island, .home-indicator {
                 display: flex !important;
             }
@@ -139,12 +132,6 @@
                 position: relative;
                 display: flex;
                 flex-direction: column;
-            }
-            /* На мобильных навигация фиксирована */
-            .bottom-nav{
-                position: fixed;
-                left: 0;
-                right: 0;
             }
             .status-bar, .dynamic-island, .home-indicator {
                 display: none !important;
@@ -392,8 +379,12 @@
         .modal-handle{width:36px;height:5px;background:#D1D5DB;border-radius:3px;margin:0 auto 8px;}
         .modal-actions{display:flex;flex-direction:column;gap:8px;}
 
-        /* Bottom Navigation */
+        /* Bottom Navigation - FIXED POSITION */
         .bottom-nav{
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
             display:flex;
             padding:6px 8px 0;
             border-top:1px solid var(--border);
@@ -490,7 +481,7 @@
                 <div class="home-indicator"></div>
             </div>
 
-            <!-- Bottom Navigation -->
+            <!-- Bottom Navigation - FIXED -->
             <div class="bottom-nav" id="bottomNav">
                 <button class="nav-item active" data-page="dashboard" onclick="switchTab(this)"><span class="nav-icon">📊</span>Дашборд</button>
                 <button class="nav-item" data-page="integrations" onclick="switchTab(this)"><span class="nav-icon">🔗</span>Интеграции</button>
