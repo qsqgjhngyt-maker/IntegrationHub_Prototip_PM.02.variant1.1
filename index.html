@@ -37,6 +37,7 @@
             --font: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
             --safe-bottom: env(safe-area-inset-bottom, 20px);
             --nav-height: 84px;
+            --sidebar-width: 280px;
         }
 
         .dark-theme {
@@ -167,10 +168,10 @@
                 top: 120px;
             }
             
-            /* Desktop layout styles */
+            /* ===== DESKTOP LAYOUT ===== */
             .phone-frame.desktop-view .content-wrapper{
                 display: grid;
-                grid-template-columns: 260px 1fr;
+                grid-template-columns: var(--sidebar-width) 1fr;
                 height: 100vh;
                 overflow: hidden;
             }
@@ -180,94 +181,228 @@
             .phone-frame.desktop-view .search-box{
                 display: none;
             }
-            .phone-frame.desktop-view .main-content{
-                padding: 40px;
-                overflow-y: auto;
-                background: var(--bg-page);
-            }
+            
+            /* Sidebar Navigation */
             .phone-frame.desktop-view .bottom-nav{
                 position: fixed;
                 left: 0;
                 top: 0;
                 bottom: 0;
-                width: 260px;
+                width: var(--sidebar-width);
                 flex-direction: column;
-                align-items: flex-start;
-                padding: 24px 16px;
+                align-items: stretch;
+                padding: 0;
                 border-top: none;
                 border-right: 1px solid var(--border);
                 background: var(--bg-card);
                 z-index: 100;
+                overflow-y: auto;
             }
+            
+            /* Sidebar Header */
+            .phone-frame.desktop-view .bottom-nav::before {
+                content: 'IntegrationHub';
+                display: block;
+                padding: 24px 24px 20px;
+                font-size: 20px;
+                font-weight: 800;
+                color: var(--accent);
+                letter-spacing: -0.5px;
+                border-bottom: 1px solid var(--border);
+            }
+            
             .phone-frame.desktop-view .nav-item{
                 flex-direction: row;
                 justify-content: flex-start;
-                padding: 14px 16px;
-                margin: 6px 0;
+                padding: 14px 24px;
+                margin: 4px 12px;
                 border-radius: 12px;
-                width: 100%;
+                width: auto;
                 gap: 14px;
                 font-size: 14px;
+                font-weight: 500;
+                color: var(--text-secondary);
+                transition: all 0.2s;
+            }
+            .phone-frame.desktop-view .nav-item:hover {
+                background: var(--accent-light);
+                color: var(--accent);
             }
             .phone-frame.desktop-view .nav-item .nav-icon{
-                font-size: 22px;
+                font-size: 20px;
             }
             .phone-frame.desktop-view .nav-item.active{
                 background: var(--accent-light);
                 color: var(--accent);
+                font-weight: 600;
             }
             
-            /* Desktop content layout */
+            /* Main Content Area */
+            .phone-frame.desktop-view .main-content{
+                padding: 32px 40px;
+                overflow-y: auto;
+                background: var(--bg-page);
+                padding-bottom: 40px;
+            }
+            
+            /* Desktop Header */
+            .desktop-header {
+                display: none;
+            }
+            @media (min-width: 768px) {
+                .phone-frame.desktop-view .desktop-header {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    margin-bottom: 32px;
+                    padding-bottom: 24px;
+                    border-bottom: 1px solid var(--border);
+                }
+                .phone-frame.desktop-view .desktop-header h1 {
+                    font-size: 28px;
+                    font-weight: 800;
+                    color: var(--text-primary);
+                }
+                .phone-frame.desktop-view .desktop-header .header-actions {
+                    display: flex;
+                    gap: 12px;
+                    align-items: center;
+                }
+                .phone-frame.desktop-view .desktop-search {
+                    display: flex !important;
+                    background: var(--bg-card);
+                    border: 1px solid var(--border);
+                    border-radius: 12px;
+                    padding: 10px 16px;
+                    gap: 10px;
+                    align-items: center;
+                    width: 320px;
+                    margin-bottom: 32px;
+                    transition: all 0.2s;
+                }
+                .phone-frame.desktop-view .desktop-search:focus-within {
+                    border-color: var(--accent);
+                    box-shadow: 0 0 0 3px rgba(59,130,246,0.1);
+                }
+                .phone-frame.desktop-view .desktop-search input {
+                    border: none;
+                    background: transparent;
+                    outline: none;
+                    font-size: 14px;
+                    flex: 1;
+                    color: var(--text-primary);
+                }
+            }
+            
+            /* Desktop Stats Grid */
             .phone-frame.desktop-view .stats-grid{
                 grid-template-columns: repeat(4, 1fr);
                 gap: 20px;
-                margin-bottom: 30px;
+                margin-bottom: 32px;
             }
-            .phone-frame.desktop-view .card{
-                margin-bottom: 20px;
+            .phone-frame.desktop-view .stat-card {
+                padding: 20px;
+                border-radius: var(--radius-lg);
             }
-            .phone-frame.desktop-view .card-header h2{
+            .phone-frame.desktop-view .stat-card .stat-value {
+                font-size: 32px;
+            }
+            
+            /* Desktop Cards */
+            .phone-frame.desktop-view .card {
+                padding: 24px;
+                margin-bottom: 24px;
+                border-radius: var(--radius-lg);
+            }
+            .phone-frame.desktop-view .card-header h2 {
                 font-size: 18px;
             }
             
-            /* Desktop form layout */
-            .phone-frame.desktop-view .field-group{
-                max-width: 600px;
+            /* Desktop Integration Cards - 3 columns */
+            .phone-frame.desktop-view .integrations-grid {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 20px;
             }
-            .phone-frame.desktop-view .segment-control{
-                max-width: 400px;
+            .phone-frame.desktop-view .integrations-grid .card {
+                margin-bottom: 0;
             }
-            .phone-frame.desktop-view .actions{
-                max-width: 600px;
+            
+            /* Desktop Objects Grid - 2 columns */
+            .phone-frame.desktop-view .objects-grid {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+            }
+            .phone-frame.desktop-view .objects-grid .card {
+                margin-bottom: 0;
+            }
+            
+            /* Desktop Form Layout */
+            .phone-frame.desktop-view .form-layout {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 24px;
+            }
+            .phone-frame.desktop-view .form-layout .field-group.full-width {
+                grid-column: 1 / -1;
+            }
+            .phone-frame.desktop-view .form-group textarea,
+            .phone-frame.desktop-view .form-group select,
+            .phone-frame.desktop-view .form-group input {
+                max-width: 100%;
+            }
+            
+            /* Desktop Actions */
+            .phone-frame.desktop-view .actions {
                 flex-direction: row;
                 gap: 12px;
+                max-width: 100%;
             }
-            .phone-frame.desktop-view .actions .btn{
+            .phone-frame.desktop-view .actions .btn {
                 width: auto;
                 min-width: 150px;
             }
             
-            /* Desktop cards grid for integrations */
-            .phone-frame.desktop-view #page-integrations .card{
-                display: inline-block;
-                width: calc(50% - 10px);
-                margin-right: 20px;
-                vertical-align: top;
-            }
-            .phone-frame.desktop-view #page-integrations .card:nth-child(2n){
-                margin-right: 0;
+            /* Desktop Tree */
+            .phone-frame.desktop-view .tree-container {
+                border-radius: var(--radius-lg);
             }
             
-            /* Desktop objects grid */
-            .phone-frame.desktop-view #page-objects .card{
-                display: inline-block;
-                width: calc(50% - 10px);
-                margin-right: 20px;
-                margin-bottom: 20px;
-                vertical-align: top;
+            /* Desktop List Items */
+            .phone-frame.desktop-view .list-item {
+                padding: 16px 0;
             }
-            .phone-frame.desktop-view #page-objects .card:nth-child(2n){
-                margin-right: 0;
+            .phone-frame.desktop-view .list-item .item-icon-box {
+                width: 44px;
+                height: 44px;
+            }
+            
+            /* Desktop Modal */
+            .phone-frame.desktop-view .modal {
+                border-radius: var(--radius-lg);
+                max-width: 500px;
+                margin: auto;
+                width: 90%;
+            }
+            .phone-frame.desktop-view .modal-overlay {
+                align-items: center;
+            }
+            
+            /* Desktop Profile Menu */
+            .phone-frame.desktop-view .profile-menu-grid {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+            .phone-frame.desktop-view .profile-menu-item {
+                padding: 16px;
+                border-radius: var(--radius-md);
+                border: 1px solid var(--border);
+            }
+            .phone-frame.desktop-view .profile-menu-item:hover {
+                background: var(--accent-light);
+                border-color: var(--accent);
             }
         }
 
@@ -385,7 +520,6 @@
             gap:14px;
             overflow-y:auto;
             -webkit-overflow-scrolling:touch;
-            /* ВАЖНО: отступ снизу чтобы контент не перекрывался навигацией */
             padding-bottom: calc(var(--nav-height) + 20px);
         }
 
@@ -514,7 +648,7 @@
 
         /* Toasts */
         .toast-container{
-            position:fixed; /* На мобильных - fixed */
+            position:fixed;
             top:60px;
             left:50%;
             transform:translateX(-50%);
@@ -540,7 +674,7 @@
 
         /* Modals */
         .modal-overlay{
-            position:fixed; /* На мобильных - fixed */
+            position:fixed;
             inset:0;
             background:rgba(0,0,0,0.5);
             z-index:200;
@@ -564,7 +698,7 @@
 
         /* Bottom Navigation */
         .bottom-nav{
-            position:fixed; /* На мобильных - fixed */
+            position:fixed;
             bottom:0;
             left:0;
             right:0;
@@ -688,9 +822,8 @@
 
     <script>
         let currentPage='dashboard';
-        let currentView = 'mobile'; // 'mobile' или 'desktop'
+        let currentView = 'mobile';
 
-        // Переключение между мобильной и десктопной версией
         function toggleView() {
             const phoneFrame = document.getElementById('phoneFrame');
             const viewBtn = document.getElementById('viewBtn');
@@ -706,11 +839,9 @@
                 viewBtn.textContent = '🖥️ ПК версия';
                 currentView = 'mobile';
             }
-            
             localStorage.setItem('viewMode', currentView);
         }
 
-        // Clock
         function updateClock(){
             const now=new Date();
             const h=String(now.getHours()).padStart(2,'0');
@@ -821,11 +952,8 @@
         function pageDocs(){return '<div class="page active"><div class="card" onclick="showToast(\'Открыто\',\'info\')" style="cursor:pointer;"><span style="font-size:32px;">🚀</span><div style="font-weight:700;font-size:16px;">Быстрый старт</div><div style="font-size:13px;color:var(--text-secondary);">Как начать за 5 минут</div></div><div class="card" onclick="showToast(\'Открыто\',\'info\')" style="cursor:pointer;"><span style="font-size:32px;">📘</span><div style="font-weight:700;font-size:16px;">API Reference</div><div style="font-size:13px;color:var(--text-secondary);">Полное описание методов</div></div><div class="card" onclick="showToast(\'Открыто\',\'info\')" style="cursor:pointer;"><span style="font-size:32px;">💡</span><div style="font-weight:700;font-size:16px;">Примеры</div><div style="font-size:13px;color:var(--text-secondary);">Готовые сценарии</div></div></div>';}
         function pageSupport(){return '<div class="page active"><div class="card"><div class="card-header"><h2>Новое обращение</h2></div><div class="field-group"><label>Тема</label><input type="text" placeholder="Опишите проблему..."></div><div class="field-group"><label>Сообщение</label><textarea rows="5" placeholder="Подробное описание..."></textarea></div><button class="btn btn-primary" onclick="showToast(\'Отправлено!\',\'success\')">📤 Отправить</button></div></div>';}
 
-        // Восстановление состояния при загрузке
         document.addEventListener('DOMContentLoaded',function(){
             renderPage('dashboard');
-            
-            // Восстанавливаем режим просмотра
             const savedView = localStorage.getItem('viewMode');
             if (savedView === 'desktop') {
                 toggleView();
